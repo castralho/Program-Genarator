@@ -5,6 +5,9 @@ export default function App() {
 
   console.log("App executed");
 
+  let x;
+  x.toString();
+
   return (
     <View style={styles.container}>
       <Text>Program Generator</Text>
