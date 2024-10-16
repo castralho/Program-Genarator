@@ -1,12 +1,47 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, FlatList, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 const ProgramGenerator = () => {
   //console.log("App executed");
+
+  const [songs, setSongs] = useState([]);
+  const [newSongName, setNewSongName] = useState('');
+  const [newSongNumber, setNewSongNumber] = useState('');
+  const [newSongMoment, setNewSongMoment] = useState('');
+  const [showSongList, setShowSongList] = useState(false); // Estado para controlar a visibilidade da lista
+
+  useEffect(() => {
+    const loadSongs = async () => {
+      try {
+        const storedSongs = await AsyncStorage.getItem('songs');
+        if (storedSongs) {
+          setSongs(JSON.parse(storedSongs));
+        }
+        else{
+          const initialSongs = [
+            { name: 'Música da Entrada', number: 1, moment: 'Entrada' },
+            { name: 'Ato Penitencial', number: 2, moment: 'Ato penitencial' },
+            { name: 'Aleluia de Louvor', number: 3, moment: 'Aleluia' },
+            { name: 'Ofertório de Adoração', number: 4, moment: 'Ofertório' },
+            { name: 'Santo dos Santos', number: 5, moment: 'Santo' },
+            { name: 'Paz do Senhor', number: 6, moment: 'Paz' },
+            { name: 'Comunhão Sagrada', number: 7, moment: 'Comunhão' },
+            { name: 'Ação de Graças', number: 8, moment: 'Ação de Graças' },
+            { name: 'Cântico Final', number: 9, moment: 'Final' },
+          ];
+          setSongs(initialSongs);
+          await AsyncStorage.setItem('songs', JSON.stringify(initialSongs));
+        }
+      } catch (error) {
+        console.error('Erro a carregar as músicas. Fale com o Quim, mas quase de certeza que ele não vai saber resolver!', error);
+      }
+    };
+    loadSongs();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
