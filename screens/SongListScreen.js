@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, FlatList, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, FlatList, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SongListScreen = () => {
@@ -26,6 +26,8 @@ const SongListScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor={styles.safeArea.backgroundColor} translucent={false} />
+
       <FlatList
         data={songs}
         renderItem={renderSong}
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: '#f5f5f5',
     },
     songList: {
       width: '100%',

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, TextInput, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, TextInput, StatusBar, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RadioGroup from 'react-native-radio-buttons-group';
 
 const AddSongScreen = ({ navigation }) => {
     const [newSongName, setNewSongName] = useState('');
@@ -23,6 +24,7 @@ const AddSongScreen = ({ navigation }) => {
       setNewSongName('');
       setNewSongNumber('');
       setNewSongMoment('');
+      alert('Quero ver se vais saber tocar esta... Música adicionada!');
     } else {
       alert('Deixa de ser burro, e preenche todos os campos... Nem venhas dizer que não viste!');
     }
@@ -50,12 +52,13 @@ const AddSongScreen = ({ navigation }) => {
           onChangeText={setNewSongMoment}
           style={styles.input}
         />
+
         <TouchableOpacity style={styles.button} onPress={addSong}>
           <Text style={styles.buttonText}>Adicionar Música</Text>
         </TouchableOpacity>
         
       </View>
-      <Text style={styles.footerText}>Program Generator by @maneca and @castralho</Text>
+      <Text style={styles.footerText}>"Uma vez Despertar, para sempre Despertar"</Text>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
