@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const SongListScreen = () => {
   const [songs, setSongs] = useState([]);
@@ -89,18 +90,39 @@ const SongListScreen = () => {
           style={styles.headerColumn}
         >
           <Text style={styles.textButton}>Número</Text>
+          {sortOrder.field === "number" && (
+            <Icon
+              name={sortOrder.direction === "asc" ? "caret-up" : "caret-down"}
+              size={15}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleSort("name")}
           style={styles.headerColumn}
         >
           <Text style={styles.textButton}>Nome</Text>
+          {sortOrder.field === "name" && (
+            <Icon
+              name={sortOrder.direction === "asc" ? "caret-up" : "caret-down"}
+              size={15}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleSort("moment")}
           style={styles.headerColumn}
         >
           <Text style={styles.textButton}>Momento</Text>
+          {sortOrder.field === "moment" && (
+            <Icon
+              name={sortOrder.direction === "asc" ? "caret-up" : "caret-down"}
+              size={15}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
       </View>
 
@@ -133,11 +155,18 @@ const styles = StyleSheet.create({
   headerColumn: {
     flex: 1, // Permite que cada coluna ocupe espaço igual
     alignItems: "left",
-    justifyContent: "center", // Alinha o texto verticalmente
+    justifyContent: "center",
     paddingHorizontal: 10,
+    flexDirection: "row", // Adicionado para alinhar o texto e o ícone
+    justifyContent: "flex-start", // Alinha o texto à esquerda
   },
   textButton: {
     fontWeight: "bold",
+    marginRight: 5, // Menos margem para o ícone ficar mais próximo
+  },
+  icon: {
+    marginLeft: 3, // Adiciona um pouco de espaço à esquerda do ícone
+    alignSelf: "center", // Centraliza o ícone verticalmente
   },
   list: {
     flex: 1, // Garante que a lista ocupe o restante da tela

@@ -31,6 +31,30 @@ const AddSongScreen = ({ navigation }) => {
     { id: "9", label: "Final", value: "Final" },
   ];
 
+  // Função para aceitar somente letras inteiros no input do nome da música
+  const handleNameChange = (value) => {
+    // Verifica se o valor contém apenas letras (incluindo espaços)
+    if (/^[a-zA-ZÀ-ÿ\s]*$/.test(value)) {
+      // Aceita apenas letras e espaços
+      setNewSongName(value);
+    } else {
+      alert(
+        "Deves pensar que ando a dormir, não? Escreve lá um nome só com LETRAS."
+      );
+    }
+  };
+
+  // Função para aceitar somente números inteiros no input do número da música
+  const handleNumberChange = (value) => {
+    // Verifica se o valor é um número inteiro
+    if (/^\d*$/.test(value)) {
+      // Aceita apenas dígitos
+      setNewSongNumber(value);
+    } else {
+      alert("Deves pensar que ando a dormir, não? Escolhe um número inteiro.");
+    }
+  };
+
   const addSong = async () => {
     if (newSongName && newSongNumber && newSongMoment) {
       const newSong = {
@@ -71,7 +95,7 @@ const AddSongScreen = ({ navigation }) => {
       }, 3000);
     } else {
       alert(
-        "Deixa de ser burro, e preenche todos os campos... Nem venhas dizer que não viste!"
+        "Deixa de ser burro, e preenche todos os campos... Não venhas dizer que não viste!"
       );
     }
   };
@@ -87,14 +111,14 @@ const AddSongScreen = ({ navigation }) => {
         <TextInput
           placeholder="Nome"
           value={newSongName}
-          onChangeText={setNewSongName}
+          onChangeText={handleNameChange}
           style={styles.input}
         />
 
         <TextInput
           placeholder="Número"
           value={newSongNumber}
-          onChangeText={setNewSongNumber}
+          onChangeText={handleNumberChange}
           keyboardType="numeric"
           style={styles.input}
         />
