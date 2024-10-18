@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   // Cabeçalhos da tabela com largura específica para cada coluna
   headerColumn: {
     flex: 1, // Permite que cada coluna ocupe espaço igual
-    alignItems: "left", // Centraliza o texto
+    alignItems: "left",
     justifyContent: "center", // Alinha o texto verticalmente
     paddingHorizontal: 10,
   },
@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
   columnName: {
     flex: 2,
     textAlign: "left",
-    paddingHorizontal: "5%", // Adiciona espaçamento à esquerda e à direita
+    paddingHorizontal: 10, // Adiciona espaçamento à esquerda e à direita
   },
   columnMoment: {
     flex: 2,
     textAlign: "left",
-    paddingLeft: "5%", // Adiciona espaçamento à esquerda
+    paddingLeft: 25, // Adiciona espaçamento à esquerda
   },
 });
 

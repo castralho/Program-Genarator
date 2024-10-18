@@ -4,7 +4,7 @@
     "slug": "program-generator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/despertar-logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",

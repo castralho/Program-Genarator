@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end", //Posiciona o conteúdo no final do ecrã
     alignItems: "center",
     padding: 20,
-    //backgroundColor: '#181B1E',
+    //backgroundColor: "#181B1E",
   },
   footerText: {
     fontSize: 12,
