@@ -40,7 +40,6 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Texto no fundo do ecrã */}
       <Text style={styles.footerText}>Program Generator by @castralho</Text>
-      <Text style={styles.footerText}>Thought by @maneca</Text>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
