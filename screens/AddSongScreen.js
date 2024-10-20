@@ -123,7 +123,7 @@ const AddSongScreen = ({ navigation }) => {
           style={styles.input}
         />
 
-        {/* Uma vez que o picker não consegue ser alterado no seu estilo, coloquei o picker dentro de uma view e editei a view*/}
+        {/* Uma vez que o picker não consegue ser alterado no seu estilo, coloquei o picker dentro de uma view e editei a view */}
         <View style={styles.picker}>
           <Picker
             selectedValue={newSongMoment}
