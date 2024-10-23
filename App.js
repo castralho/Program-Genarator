@@ -5,6 +5,7 @@ import { StatusBar } from "react-native";
 import AddSongScreen from "./screens/AddSongScreen";
 import SongListScreen from "./screens/SongListScreen";
 import HomeScreen from "./screens/HomeScreen";
+import GeneratePlanScreen from "./screens/GeneratePlanScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,11 @@ const ProgramGenerator = () => {
       />
 
       <Stack.Navigator initialRouteName="HomeScreen">
+        <Stack.Screen
+          name="GeneratePlan"
+          component={GeneratePlanScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}

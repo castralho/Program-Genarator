@@ -17,9 +17,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            /* Função para gerar músicas */
-          }}
+          onPress={() => navigation.navigate("GeneratePlan")}
         >
           <Text style={styles.buttonText}>Gerar Plano</Text>
         </TouchableOpacity>
