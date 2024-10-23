@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import songsData from "../songsData"; // Importa a lista de músicas
 import styles from "../styles/AddSongScreenStyles";
 
 const AddSongScreen = ({ navigation }) => {
@@ -18,6 +19,7 @@ const AddSongScreen = ({ navigation }) => {
   const [newSongNumber, setNewSongNumber] = useState("");
   const [newSongMoment, setNewSongMoment] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // Estado para a mensagem de sucesso
+  const [songs, setSongs] = useState([]); // Estado para armazenar as músicas
 
   // Array com os momentos disponíveis para a música
   const moments = [
@@ -64,15 +66,12 @@ const AddSongScreen = ({ navigation }) => {
         moment: newSongMoment,
       };
 
-      // Carrega a lista de músicas guardadas
-      const storedSongs = await AsyncStorage.getItem("songs");
-      const songs = storedSongs ? JSON.parse(storedSongs) : [];
+      // Verifica se o número já existe nas músicas guardadas
+      const isNumberTaken = (number) => {
+        return songs.some((song) => song.number === number);
+      };
 
-      // Verifica se o número já existe
-      const isNumberTaken = songs.some(
-        (song) => song.number === newSong.number
-      );
-      if (isNumberTaken) {
+      if (isNumberTaken(newSong.number)) {
         alert("Ó nabo, já existe uma música com este número!");
         setNewSongNumber("");
         return; // Impede que a música seja adicionada
@@ -81,8 +80,9 @@ const AddSongScreen = ({ navigation }) => {
       // Se o número for único, adiciona a nova música
       const updatedSongs = [...songs, newSong];
       await AsyncStorage.setItem("songs", JSON.stringify(updatedSongs));
+      setSongs(updatedSongs); // Atualiza o estado das músicas
 
-      //Limpar os inputs
+      // Limpar os inputs
       setNewSongName("");
       setNewSongNumber("");
       setNewSongMoment("");
@@ -100,6 +100,22 @@ const AddSongScreen = ({ navigation }) => {
       );
     }
   };
+
+  // Adiciona as músicas pré carregadas ao AsyncStorage se ainda não estiverem lá
+  const initializeSongsData = async () => {
+    const storedSongs = await AsyncStorage.getItem("songs");
+    if (!storedSongs) {
+      await AsyncStorage.setItem("songs", JSON.stringify(songsData));
+      setSongs(songsData); // Atualiza o estado das músicas com os dados iniciais
+    } else {
+      setSongs(JSON.parse(storedSongs)); // Carrega músicas já armazenadas
+    }
+  };
+
+  // Usa useEffect para inicializar os dados de músicas ao montar o componente
+  useEffect(() => {
+    initializeSongsData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
