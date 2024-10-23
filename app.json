@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/adaptive-icon.svg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.castralho.programgenerator"
