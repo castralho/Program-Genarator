@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import styles from "../styles/AddSongScreenStyles";
 
 const AddSongScreen = ({ navigation }) => {
   const [newSongName, setNewSongName] = useState("");
@@ -33,14 +34,14 @@ const AddSongScreen = ({ navigation }) => {
 
   // Função para aceitar somente letras inteiros no input do nome da música
   const handleNameChange = (value) => {
-    // Verifica se o valor contém apenas letras (incluindo espaços)
-    if (/^[a-zA-ZÀ-ÿ\s]*$/.test(value)) {
-      // Aceita apenas letras e espaços
-      setNewSongName(value);
+    // Remove espaços no início
+    const trimmedValue = value.replace(/^\s+/, "");
+
+    // Verifica se o valor contém apenas letras e espaços
+    if (/^[a-zA-ZÀ-ÿ\s]*$/.test(trimmedValue)) {
+      setNewSongName(trimmedValue);
     } else {
-      alert(
-        "Deves pensar que ando a dormir, não? Escreve lá um nome só com LETRAS."
-      );
+      alert("Deves pensar que ando a dormir. Introduz apenas letras!");
     }
   };
 
@@ -51,14 +52,14 @@ const AddSongScreen = ({ navigation }) => {
       // Aceita apenas dígitos
       setNewSongNumber(value);
     } else {
-      alert("Deves pensar que ando a dormir, não? Escolhe um número inteiro.");
+      alert("Deixa de ser tecla 3 e introduz apenas números!");
     }
   };
 
   const addSong = async () => {
     if (newSongName && newSongNumber && newSongMoment) {
       const newSong = {
-        name: newSongName,
+        name: newSongName.trim(),
         number: parseInt(newSongNumber),
         moment: newSongMoment,
       };
@@ -89,7 +90,7 @@ const AddSongScreen = ({ navigation }) => {
       // Exibir mensagem de sucesso
       setSuccessMessage("Música adicionada com sucesso!");
 
-      // Remover a mensagem após 5 segundos
+      // Remover a mensagem após 3 segundos
       setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
@@ -154,64 +155,5 @@ const AddSongScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    justifyContent: "flex-end", // Posiciona o conteúdo no final do ecrã
-    alignItems: "center",
-    padding: 20,
-  },
-  successText: {
-    color: "green",
-    fontSize: 15,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: "center",
-    width: "95%",
-  },
-  button: {
-    backgroundColor: "#cf5d25", // Cor de fundo do botão
-    paddingVertical: 30, // Altura do botão
-    paddingHorizontal: 25, // Largura interna
-    borderRadius: 15, // Canto arredondado
-    marginBottom: 40, // Espaço entre botões
-    alignItems: "center", // Centraliza o texto
-  },
-  buttonText: {
-    color: "#FFFFFF", // Cor do texto
-    fontSize: 20, // Tamanho do texto
-    fontWeight: "600", // Peso da fonte
-  },
-  input: {
-    backgroundColor: "lightgrey",
-    paddingVertical: 20,
-    borderColor: "grey",
-    borderWidth: 2,
-    borderRadius: 10,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-    width: "100%",
-  },
-  picker: {
-    backgroundColor: "lightgrey",
-    paddingVertical: 7,
-    borderColor: "grey",
-    borderWidth: 2,
-    borderRadius: 10,
-    marginBottom: 20,
-    width: "100%",
-  },
-  footerText: {
-    fontSize: 12,
-    color: "#888", // Cor mais suave para o texto
-    marginBottom: 5, // Pequena margem no fundo
-    textAlign: "center",
-  },
-});
 
 export default AddSongScreen;

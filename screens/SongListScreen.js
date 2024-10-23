@@ -7,24 +7,31 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
+import defaultSongs from "../songsData"; // Importa os dados das músicas
+import styles from "../styles/SongListScreenStyles"; // Importa os estilos
 
 const SongListScreen = () => {
   const [songs, setSongs] = useState([]);
   const [sortOrder, setSortOrder] = useState({ field: null, direction: "asc" }); // Adiciona estado para a ordem de classificação
+  const [pressedSong, setPressedSong] = useState(null); // Adiciona estado para a música pressionada
 
   useEffect(() => {
     const loadSongs = async () => {
       try {
         const storedSongs = await AsyncStorage.getItem("songs");
-        if (storedSongs) {
-          // Parsea as músicas do armazenamento
+        if (!storedSongs) {
+          // Se não houver músicas guardadas, pré-carregar as músicas padrão
+          await AsyncStorage.setItem("songs", JSON.stringify(defaultSongs));
+          setSongs(defaultSongs);
+        } else {
+          // Se já houver músicas, carregar da memória
           const parsedSongs = JSON.parse(storedSongs);
-
-          // Ordena as músicas por número ao carregar
-          const sortedSongs = parsedSongs.sort(
+          const combinedSongs = mergeSongs(parsedSongs, defaultSongs);
+          const sortedSongs = combinedSongs.sort(
             (a, b) => Number(a.number) - Number(b.number)
           );
           setSongs(sortedSongs);
@@ -39,6 +46,19 @@ const SongListScreen = () => {
 
     loadSongs();
   }, []);
+
+  const mergeSongs = (storedSongs, defaultSongs) => {
+    // Cria um Set para rastrear números de músicas existentes
+    const existingNumbers = new Set(storedSongs.map((song) => song.number));
+
+    // Adiciona apenas as músicas do defaultSongs que não estão no armazenamento
+    const newSongs = defaultSongs.filter(
+      (song) => !existingNumbers.has(song.number)
+    );
+
+    // Retorna a combinação de músicas armazenadas e novas
+    return [...storedSongs, ...newSongs];
+  };
 
   const handleSort = (field) => {
     // Alterna entre as direções de classificação
@@ -67,12 +87,52 @@ const SongListScreen = () => {
     setSongs(sortedSongs);
   };
 
+  const handleDeleteSong = async (song) => {
+    // Mostra uma caixa de alerta para confirmação da eliminação
+    Alert.alert(
+      "Eliminar música",
+      `Tens a certeza que queres eliminar a música "${song.name}"?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: async () => {
+            try {
+              // Remove a música da lista
+              const updatedSongs = songs.filter(
+                (item) => item.number !== song.number
+              );
+              setSongs(updatedSongs);
+
+              // Atualiza o armazenamento
+              await AsyncStorage.setItem("songs", JSON.stringify(updatedSongs));
+            } catch (error) {
+              console.error("Erro ao eliminar a música:", error);
+            }
+          },
+          style: "destructive",
+        },
+      ]
+    );
+  };
+
   const renderSong = ({ item }) => (
-    <View style={styles.row}>
+    <TouchableOpacity
+      onPressIn={() => setPressedSong(item.number)} // Define a música pressionada
+      onPressOut={() => setPressedSong(null)} // Reseta quando solta
+      onPress={() => handleDeleteSong(item)}
+      style={[
+        styles.row,
+        pressedSong === item.number && styles.rowPressed, // Aplica o estilo quando pressionada
+      ]}
+    >
       <Text style={styles.columnNumber}>{item.number}</Text>
       <Text style={styles.columnName}>{item.name}</Text>
       <Text style={styles.columnMoment}>{item.moment}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -137,64 +197,5 @@ const SongListScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  headerRow: {
-    flexDirection: "row",
-    backgroundColor: "#ddd",
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  // Cabeçalhos da tabela com largura específica para cada coluna
-  headerColumn: {
-    flex: 1, // Permite que cada coluna ocupe espaço igual
-    alignItems: "left",
-    justifyContent: "center",
-    paddingHorizontal: 10,
-    flexDirection: "row", // Adicionado para alinhar o texto e o ícone
-    justifyContent: "flex-start", // Alinha o texto à esquerda
-  },
-  textButton: {
-    fontWeight: "bold",
-    marginRight: 5, // Menos margem para o ícone ficar mais próximo
-  },
-  icon: {
-    marginLeft: 3, // Adiciona um pouco de espaço à esquerda do ícone
-    alignSelf: "center", // Centraliza o ícone verticalmente
-  },
-  list: {
-    flex: 1, // Garante que a lista ocupe o restante da tela
-  },
-  listContent: {
-    flexGrow: 1, // Garante que o conteúdo cresça para preencher o espaço da lista
-  },
-  row: {
-    flexDirection: "row",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  columnNumber: {
-    flex: 1,
-    textAlign: "left",
-  },
-  columnName: {
-    flex: 2,
-    textAlign: "left",
-    paddingHorizontal: 10, // Adiciona espaçamento à esquerda e à direita
-  },
-  columnMoment: {
-    flex: 2,
-    textAlign: "left",
-    paddingLeft: 25, // Adiciona espaçamento à esquerda
-  },
-});
 
 export default SongListScreen;
