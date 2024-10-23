@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
-import defaultSongs from "../songsData"; // Importa os dados das músicas
 import styles from "../styles/SongListScreenStyles"; // Importa os estilos
 
 const SongListScreen = () => {
@@ -23,15 +22,10 @@ const SongListScreen = () => {
     const loadSongs = async () => {
       try {
         const storedSongs = await AsyncStorage.getItem("songs");
-        if (!storedSongs) {
-          // Se não houver músicas guardadas, pré-carregar as músicas padrão
-          await AsyncStorage.setItem("songs", JSON.stringify(defaultSongs));
-          setSongs(defaultSongs);
-        } else {
-          // Se já houver músicas, carregar da memória
+        if (storedSongs) {
+          // Carrega músicas da memória
           const parsedSongs = JSON.parse(storedSongs);
-          const combinedSongs = mergeSongs(parsedSongs, defaultSongs);
-          const sortedSongs = combinedSongs.sort(
+          const sortedSongs = parsedSongs.sort(
             (a, b) => Number(a.number) - Number(b.number)
           );
           setSongs(sortedSongs);
@@ -46,19 +40,6 @@ const SongListScreen = () => {
 
     loadSongs();
   }, []);
-
-  const mergeSongs = (storedSongs, defaultSongs) => {
-    // Cria um Set para rastrear números de músicas existentes
-    const existingNumbers = new Set(storedSongs.map((song) => song.number));
-
-    // Adiciona apenas as músicas do defaultSongs que não estão no armazenamento
-    const newSongs = defaultSongs.filter(
-      (song) => !existingNumbers.has(song.number)
-    );
-
-    // Retorna a combinação de músicas armazenadas e novas
-    return [...storedSongs, ...newSongs];
-  };
 
   const handleSort = (field) => {
     // Alterna entre as direções de classificação

@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
-import songsData from "../songsData"; // Importa a lista de músicas
 import styles from "../styles/AddSongScreenStyles";
 
 const AddSongScreen = ({ navigation }) => {
@@ -66,7 +65,6 @@ const AddSongScreen = ({ navigation }) => {
         moment: newSongMoment,
       };
 
-      // Verifica se o número já existe nas músicas guardadas
       const isNumberTaken = (number) => {
         return songs.some((song) => song.number === number);
       };
@@ -74,23 +72,18 @@ const AddSongScreen = ({ navigation }) => {
       if (isNumberTaken(newSong.number)) {
         alert("Ó nabo, já existe uma música com este número!");
         setNewSongNumber("");
-        return; // Impede que a música seja adicionada
+        return;
       }
 
-      // Se o número for único, adiciona a nova música
       const updatedSongs = [...songs, newSong];
       await AsyncStorage.setItem("songs", JSON.stringify(updatedSongs));
-      setSongs(updatedSongs); // Atualiza o estado das músicas
+      setSongs(updatedSongs);
 
-      // Limpar os inputs
       setNewSongName("");
       setNewSongNumber("");
       setNewSongMoment("");
-
-      // Exibir mensagem de sucesso
       setSuccessMessage("Música adicionada com sucesso!");
 
-      // Remover a mensagem após 3 segundos
       setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
@@ -101,20 +94,15 @@ const AddSongScreen = ({ navigation }) => {
     }
   };
 
-  // Adiciona as músicas pré carregadas ao AsyncStorage se ainda não estiverem lá
-  const initializeSongsData = async () => {
+  const loadStoredSongs = async () => {
     const storedSongs = await AsyncStorage.getItem("songs");
-    if (!storedSongs) {
-      await AsyncStorage.setItem("songs", JSON.stringify(songsData));
-      setSongs(songsData); // Atualiza o estado das músicas com os dados iniciais
-    } else {
-      setSongs(JSON.parse(storedSongs)); // Carrega músicas já armazenadas
+    if (storedSongs) {
+      setSongs(JSON.parse(storedSongs));
     }
   };
 
-  // Usa useEffect para inicializar os dados de músicas ao montar o componente
   useEffect(() => {
-    initializeSongsData();
+    loadStoredSongs();
   }, []);
 
   return (
