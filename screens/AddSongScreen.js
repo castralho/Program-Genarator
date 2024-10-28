@@ -33,16 +33,18 @@ const AddSongScreen = ({ navigation }) => {
     { id: "9", label: "Final", value: "Final" },
   ];
 
-  // Função para aceitar somente letras inteiros no input do nome da música
+  // Função para aceitar apenas letras, espaços, hífens e parênteses
   const handleNameChange = (value) => {
     // Remove espaços no início
     const trimmedValue = value.replace(/^\s+/, "");
 
-    // Verifica se o valor contém apenas letras e espaços
-    if (/^[a-zA-ZÀ-ÿ\s]*$/.test(trimmedValue)) {
+    // Verifica se o valor contém apenas letras, espaços, hífens e parênteses
+    if (/^[a-zA-ZÀ-ÿ\s\-\(\)]*$/.test(trimmedValue)) {
       setNewSongName(trimmedValue);
     } else {
-      alert("Deves pensar que ando a dormir. Introduz apenas letras!");
+      alert(
+        "Deves pensar que ando a dormir. Introduz somente letras, hífens ou parênteses"
+      );
     }
   };
 

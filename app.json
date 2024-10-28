@@ -18,7 +18,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/ic_launcher_foreground.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#cf5d25"
       },
       "package": "com.castralho.programgenerator"
     },
